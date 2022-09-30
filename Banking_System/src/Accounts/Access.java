@@ -1,17 +1,66 @@
-package Accountant;
+package Accounts;
 
 import java.util.Scanner;
 
 import BankingDao.BankingSys;
 import BankingDao.BankingSysImp;
 
-public class AccountantAcess {
+public class Access {
 	
 
 	public static void main(String[] args) {
 		Scanner sc= new Scanner (System.in);
 		BankingSysImp ban= new BankingSysImp();
 		
+		
+		System.out.println("Choose your profession ");
+		System.out.println("1.Accountant");
+		System.out.println("2.Customer");
+		
+		int res=sc.nextInt();
+		
+		
+		if(res==2) {
+			
+			System.out.println("Enter email id---");
+			String email=sc.next();
+			System.out.println("Enter pass---");
+			int pass=sc.nextInt();
+			ban.loginCus(email, pass);
+			
+			while(ban.getFlag()) {
+				System.out.println("Enter you choice----");
+				System.out.println("1.Transfer money to another account");
+				System.out.println("2.Show history");
+				System.out.println("3.Exit");
+				
+				int choice=sc.nextInt();
+				
+				if(choice==1) {
+					System.out.println("Enter the account no. in which you want to transfer the money");
+					int act2=sc.nextInt();
+					System.out.println("Enter the amount");
+					int mon=sc.nextInt();
+					ban.withdrwal(ban.getAct(), mon);
+					ban.deposit(act2, mon);
+					
+					
+					
+				}
+				else if(choice==2) {
+					//System.out.println(ban.getAct());
+					ban.showhis(ban.getAct());
+				}
+				else if(choice==3)break;
+				else System.out.println("Invalid choice please select valid choice");
+				
+				
+			}
+		
+			
+			
+		}
+		else if(res==1) {
 		System.out.println("Enter email id---");
 		String email=sc.next();
 		System.out.println("Enter pass---");
@@ -45,6 +94,13 @@ else if(choice==6) {
 		System.out.println("Enter amount for deposit-------");
 		int rupees=sc.nextInt();
 		ban.deposit(act, rupees);
+	}
+	if(ch==2) {
+		System.out.println("Enter account number---");
+		int act=sc.nextInt();
+		System.out.println("Enter amount for withdrawl-------");
+		int rupees=sc.nextInt();
+		ban.withdrwal(act, rupees);
 	}
 	
 }
@@ -121,4 +177,7 @@ else if(choice==5)ban.displayAll();
 	}
 		System.out.println("Thank you=======");
 	}
+		else System.out.println("Invalid choice");
+	}
+	
 }

@@ -12,6 +12,8 @@ public interface BankingSys {
 	abstract void editpass(int actNo,int pass);
 	abstract void deposit(int actNo,int rs);
 	abstract void withdrwal(int actNo,int rs);
+	abstract void loginCus(String email,int pass);
+	abstract void showhis(int act);
 	
 	
 	

@@ -4,14 +4,23 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 
 import Dbc.Connections;
 
 public class BankingSysImp implements BankingSys {
 	 boolean flag=false;
 	int count=0;
+	int act=0;
 	
-	
+public int getAct() {
+		return act;
+	}
+
+	public void setAct(int act) {
+		this.act = act;
+	}
+
 public int getCount() {
 		return count;
 	}
@@ -213,27 +222,32 @@ public boolean getFlag() {
 	}
 
 	@Override
-	public void deposit(int actNo, int rs) {
+	public void deposit(int actNo, int rsa) {
 		Connection con=	Connections.getConnection();
 		try {
-			PreparedStatement ps1= con.prepareStatement("select bal from customer where actNo=? ");
-			ResultSet ans= ps1.executeQuery();
-			int rup=rs;
-			if(ans!=null) {
-				rup=ans.getInt("bal");
-				
-			}
+			PreparedStatement ps1= con.prepareStatement("select * from customer where actNo=? ");
+			ps1.setInt(1, actNo);
+			
+			ResultSet rs= ps1.executeQuery();
+			//System.out.println(ans.getString("bal"));
+			int rup=rsa;
+		while(rs.next()) {
+			rup=rs.getInt("bal");
+			//System.out.println(rup);
+			
+		}
 		
-			int finalrs=rup+rs;
+		
+			int finalrs=rup+rsa;
 			
-			
+			//System.out.println(finalrs);
 			PreparedStatement ps=con.prepareStatement("update customer set bal=? where ActNo=?");
 			ps.setInt(1, finalrs);
 			ps.setInt(2, actNo);
 			int x=ps.executeUpdate();
 			if(x>0) {
-				System.out.println(x+" row affeted");
-			pre(actNo, rup+rs);
+				//System.out.println(x+" row affeted");
+			pre(actNo, rup+rsa);
 		
 			}
 	} catch (SQLException e) {
@@ -250,47 +264,122 @@ public boolean getFlag() {
 			PreparedStatement his=con.prepareStatement("insert into data values(?,?)");
 			his.setInt(1, act);
 			his.setInt(2, rs);
+			int x=his.executeUpdate();
+			if(x>0)
+				System.out.println("Transaction successful!!");
+			
+			
+			
 			
 			
 			
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-	System.out.println("Transaction successful!!");
+	
 		}
+		
 	}
 
 	@Override
-	public void withdrwal(int actNo, int rs) {
+	public void withdrwal(int actNo, int rsa) {
 		Connection con=	Connections.getConnection();
 		try {
-			PreparedStatement ps1= con.prepareStatement("select bal from customer where actNo=? ");
-			ResultSet ans= ps1.executeQuery();
+			PreparedStatement ps1= con.prepareStatement("select * from customer where actNo=? ");
+			ps1.setInt(1, actNo);
+			
+			ResultSet rs= ps1.executeQuery();
+			//System.out.println(ans.getString("bal"));
 			int rup=0;
-			if(ans!=null) {
-				rup=ans.getInt("bal");
-				
-			}
-			if(rup<rs) {
+		while(rs.next()) {
+			rup=rs.getInt("bal");
+			//System.out.println(rup);
+			
+		}
+			if(rup<rsa) {
 				System.out.println("Insufficient balance----");
 				return;
 			}
+int finalrs=rup-rsa;
 			
-			
-			
-			PreparedStatement ps= con.prepareStatement("update customer set bal=bal-? where actNo=? ");
-			ps.setInt(1, rs);
+			//System.out.println(finalrs);
+			PreparedStatement ps=con.prepareStatement("update customer set bal=? where ActNo=?");
+			ps.setInt(1, finalrs);
 			ps.setInt(2, actNo);
 			int x=ps.executeUpdate();
-			if(x>0) {System.out.println(x+" row affeted");
-			
-		pre(actNo, rup-rs);
+			if(x>0) {
+				//System.out.println(x+" row affeted");
+			pre(actNo, rup-rsa);
+		
 			}
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
+		System.out.println(e.getMessage());
 		System.out.println("not updated try again");
 	}
+			
+			
+			
+			
+		
+	}
+	
+	
+	
+
+	@Override
+	public void loginCus(String em, int ps) {
+		count++;
+		
+		Connection con=Connections.getConnection();
+		try {
+			PreparedStatement act=con.prepareStatement("select * from customer");
+			ResultSet rs= act.executeQuery();
+			//System.out.println(rs);
+			while(rs.next()) {
+				
+			String email=	rs.getString("email");
+			
+		int password=	rs.getInt("pass");
+		
+		
+		if(em.equalsIgnoreCase(email)&& password==ps) {
+			flag= true;
+			this.act=rs.getInt("actNo");
+			System.out.println("login sucessful from customer id ");
+			return;
+			
+		}
+		
+	}
+			if(this.count==0) System.out.println("invalid crediantials!!");
+		}
+		catch(SQLException ex) {
+			ex.getMessage();
+	
+}
+}
+
+	@Override
+	public void showhis(int act) {
+Connection con=Connections.getConnection();
+
+try {
+	PreparedStatement ps= con.prepareStatement("select * from data where custAct=?");
+	ps.setInt(1, act);
+	
+ResultSet rs=	ps.executeQuery();
+while(rs.next()) {
+	System.out.println("Account number -"+rs.getInt("custAct")+" Transaction amount-"+rs.getInt("balance"));
+}
+
+
+
+	
+} catch (SQLException e) {
+	// TODO Auto-generated catch block
+	System.out.println("Not recond found----");
+}
 		
 	}
 }
-
