@@ -155,7 +155,7 @@ else if(choice==2) {
 		ban.editpass(actNo, naam);
 		
 	}
-	else System.out.println("Please enter correct option");
+	
 	
 	
 }
@@ -172,12 +172,13 @@ else if(choice==4) {
 	
 }
 else if(choice==5)ban.displayAll();
-	
+else System.out.println("Please enter correct option");
 	
 	}
-		System.out.println("Thank you=======");
+		
 	}
 		else System.out.println("Invalid choice");
+		System.out.println("Thank you=======");
 	}
 	
 }

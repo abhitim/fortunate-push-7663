@@ -69,7 +69,7 @@ public boolean getFlag() {
 
 	@Override
 	public void insertCus(int cusId,String name, String cusEmail, int pass, int bal) {
-		System.out.println(count);
+		//System.out.println(count);
 	 if(flag) {
 		 Connection con=Connections.getConnection();
 		 try {
@@ -104,7 +104,7 @@ public boolean getFlag() {
 	PreparedStatement ps= con.prepareStatement("delete from customer where actNo=?");
 	ps.setInt(1, actNo);
 	int x=ps.executeUpdate();
-	System.out.println(x+" record deleted sucessfully");
+	System.out.println(x+"  record deleted sucessfully");
 } catch (SQLException e) {
 	System.out.println("Record not found");
 }
@@ -137,6 +137,7 @@ public boolean getFlag() {
 				System.out.println("customer password- "+rs.getInt("pass"));
 				System.out.println("customer balance - "+rs.getString("bal"));
 				System.out.print("==========================================");
+				System.out.println();
 			}   
 			    
 		} catch (SQLException e) {
